@@ -24,10 +24,14 @@ import org.objectweb.asm.Type
 /**
  * Represents a Java class file's bytecode model.
  *
- * @property pool [ClassPool] that this class belongs in
  * @constructor
  */
-class ClassFile(val pool: ClassPool) : ClassVisitor(ASM9) {
+class ClassFile : ClassVisitor(ASM9) {
+
+    /**
+     * The pool this class file belongs to.
+     */
+    lateinit var pool: ClassPool
 
     /**
      * The class name.
@@ -45,6 +49,11 @@ class ClassFile(val pool: ClassPool) : ClassVisitor(ASM9) {
     var version: Int = 0
 
     /**
+     * The name of the source class file.
+     */
+    lateinit var sourceFile: String
+
+    /**
      * The Name of the extended class or parent class.
      */
     lateinit var superClass: String
@@ -58,6 +67,44 @@ class ClassFile(val pool: ClassPool) : ClassVisitor(ASM9) {
      * The ASM object [Type].
      */
     val type: Type by lazy { Type.getObjectType(name) }
+
+    /*
+     * VISITOR METHODS
+     */
+
+    override fun visit(
+            version: Int,
+            access: Int,
+            name: String,
+            signature: String?,
+            superName: String,
+            interfaces: Array<String>
+    ) {
+        this.version = version
+        this.accessFlags = access
+        this.name = name
+        this.superClass = superName
+        this.interfaces = interfaces.toMutableList()
+    }
+
+    override fun visitSource(source: String, debug: String?) {
+        this.sourceFile = source
+    }
+
+    override fun visitEnd() {
+        /*
+         * Nothing to do
+         */
+    }
+
+    /**
+     * Makes a provided visitor visit this class.
+     *
+     * @param visitor ClassVisitor
+     */
+    fun accept(visitor: ClassVisitor) {
+
+    }
 
     override fun toString(): String {
         return name

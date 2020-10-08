@@ -17,7 +17,102 @@
 
 package org.spectralpowered.kasm.core
 
+import org.objectweb.asm.ClassReader
+import java.io.File
+import java.util.jar.JarFile
+
+/**
+ * Represents a collection of [ClassFile] objects.
+ */
 class ClassPool {
 
+    /**
+     * The map of classes in this pool object.
+     */
+    private val classMap = LinkedHashMap<String, ClassFile>()
 
+    /**
+     * The number of classes in the pool.
+     */
+    val size: Int get() = classMap.size
+
+    /**
+     * Adds a class to the pool from the raw bytecode.
+     *
+     * @param bytes ByteArray
+     * @return ClassFile
+     */
+    fun addClass(bytes: ByteArray): ClassFile {
+        val reader = ClassReader(bytes)
+        val classFile = ClassFile().apply { this.pool = this@ClassPool }
+
+        reader.accept(classFile, ClassReader.SKIP_FRAMES)
+
+        classMap[classFile.name] = classFile
+        return classFile
+    }
+
+    /**
+     * Adds all the classes inside a jar file to the pool.
+     *
+     * @param file File
+     */
+    fun addJar(file: File) {
+       JarFile(file).use { jar ->
+           jar.entries().asSequence()
+                   .filter { it.name.endsWith(".class") }
+                   .forEach { entry ->
+                       this.addClass(jar.getInputStream(entry).readAllBytes())
+                   }
+       }
+    }
+
+    /**
+     * Gets a [ClassFile] given a name. Returns null if no class is found with the provided name.
+     *
+     * @param name String
+     * @return ClassFile?
+     */
+    fun findClass(name: String): ClassFile? {
+        return this.classMap[name]
+    }
+
+    /**
+     * Invokes an action for each [ClassFile] in the pool.
+     *
+     * @param action Action to invoke
+     */
+    fun forEach(action: (ClassFile) -> Unit) {
+        classMap.values.forEach(action)
+    }
+
+    /**
+     * Maps each class file in the pool to a provided transform.
+     *
+     * @param transform Transform applied to each [ClassFile]
+     * @return Transformed [List] of elements
+     */
+    fun <T> map(transform: (ClassFile) -> T): List<T> {
+        return classMap.values.map(transform)
+    }
+
+    /**
+     * Gets the first class file in the pool the predicate returns true for.
+     *
+     * @param predicate Predicate to match on each [ClassFile]
+     * @return Matching [ClassFile] or null of none is found
+     */
+    fun firstOrNull(predicate: (ClassFile) -> Boolean): ClassFile? {
+       return classMap.values.firstOrNull(predicate)
+    }
+
+    /**
+     * Returns a list of filtered [ClassFile] from the pool which match a predicate.
+     *
+     * @param predicate Predicate to match
+     * @return Filtered [List] of [ClassFile] objects.
+     */
+    fun filter(predicate: (ClassFile) -> Boolean): List<ClassFile> {
+        return classMap.values.filter(predicate)
+    }
 }

@@ -9,9 +9,15 @@ tasks.withType<Wrapper> {
     gradleVersion = Project.gradleVersion
 }
 
+detekt {
+    failFast = true
+    buildUponDefaultConfig = true
+    config = files("$projectDir/config/detekt.yml")
+}
+
+
 allprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
-    apply(plugin = Plugin.detekt)
 
     group = "org.spectralpowered.kasm"
     version = Project.version
@@ -33,11 +39,4 @@ allprojects {
     tasks.withType<KotlinCompile> {
         kotlinOptions.jvmTarget = Project.jvmVersion
     }
-
-    detekt {
-        failFast = true
-        buildUponDefaultConfig = true
-        config = files("$projectDir/config/detekt.yml")
-    }
-
 }
