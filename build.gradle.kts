@@ -24,6 +24,10 @@ allprojects {
 
     dependencies {
         implementation(kotlin("stdlib"))
+        implementation(Library.asm)
+        implementation(Library.asmCommons)
+        implementation(Library.asmUtil)
+        testImplementation(Library.junitEngine)
     }
 
     tasks.withType<KotlinCompile> {

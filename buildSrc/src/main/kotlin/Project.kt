@@ -38,11 +38,16 @@ object Plugin {
 object Library {
     private object Version {
         const val asm = "9.0-beta"
+        const val junit = "5.7.0"
+        const val mockk = "1.10.2"
     }
 
     const val asm = "org.ow2.asm:asm:${Version.asm}"
     const val asmUtil = "org.ow2.asm:asm-util:${Version.asm}"
     const val asmCommons = "org.ow2.asm:asm-commons:${Version.asm}"
+    const val junitEngine = "org.junit.jupiter:junit-jupiter-engine:${Version.junit}"
+    const val junitApi = "org.junit.jupiter:junit-jupiter-api:${Version.junit}"
+    const val mockk = "io.mockk:mockk:${Version.mockk}"
 }
 
 /*
