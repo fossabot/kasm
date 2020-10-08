@@ -15,33 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.spectralpowered.kasm.core
+public class CannedWalrusFood {
 
-import org.junit.jupiter.api.TestInstance
+    private WalrusFood food;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-abstract class KasmTest {
-
-    val pool = ClassPool()
-
-    fun loadClass(name: String) {
-        val inputStream = KasmTest::class.java.getResource(name).openStream()
-        pool.addClass(inputStream.readAllBytes())
+    public CannedWalrusFood(WalrusFood food) {
+        this.food = food;
     }
 
-    init {
-        classes.forEach { loadClass(it) }
-    }
-
-    companion object {
-        private val classes = arrayOf(
-            "CannedWalrusFood.class",
-            "FeedsWalrus.class",
-            "Food.class",
-            "GaryTheWalrus.class",
-            "OpensCan.class",
-            "Walrus.class",
-            "WalrusFood.class"
-        )
+    public WalrusFood extractContents() {
+        WalrusFood contents = food;
+        food = null;
+        return contents;
     }
 }

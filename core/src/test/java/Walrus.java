@@ -15,33 +15,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.spectralpowered.kasm.core
+import java.util.HashSet;
+import java.util.Set;
 
-import org.junit.jupiter.api.TestInstance
+abstract public class Walrus {
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-abstract class KasmTest {
+    private String name;
 
-    val pool = ClassPool()
+    private Set<WalrusFood> stomach = new HashSet<WalrusFood>();
 
-    fun loadClass(name: String) {
-        val inputStream = KasmTest::class.java.getResource(name).openStream()
-        pool.addClass(inputStream.readAllBytes())
+    public Walrus(String name) {
+        this.name = name;
     }
 
-    init {
-        classes.forEach { loadClass(it) }
+    public String getName() {
+        return this.name;
     }
 
-    companion object {
-        private val classes = arrayOf(
-            "CannedWalrusFood.class",
-            "FeedsWalrus.class",
-            "Food.class",
-            "GaryTheWalrus.class",
-            "OpensCan.class",
-            "Walrus.class",
-            "WalrusFood.class"
-        )
+    public Boolean hasEaten(WalrusFood food) {
+        return stomach.contains(food);
+    }
+
+    public void eat(Food food) {
+        if(!(food instanceof WalrusFood)) {
+            this.puke();
+        } else {
+            stomach.add((WalrusFood) food);
+        }
+    }
+
+    public void puke() {
+        stomach.clear();
     }
 }

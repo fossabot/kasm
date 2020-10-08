@@ -34,6 +34,13 @@ allprojects {
         implementation(Library.asmCommons)
         implementation(Library.asmUtil)
         testImplementation(Library.junitEngine)
+        testImplementation(Library.junitApi)
+        testImplementation(Library.mockk)
+        testImplementation(kotlin("test"))
+    }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
     }
 
     tasks.withType<KotlinCompile> {

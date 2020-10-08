@@ -17,31 +17,21 @@
 
 package org.spectralpowered.kasm.core
 
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.Test
+import kotlin.test.assertTrue
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-abstract class KasmTest {
+class ClassPoolTest {
 
     val pool = ClassPool()
 
-    fun loadClass(name: String) {
-        val inputStream = KasmTest::class.java.getResource(name).openStream()
-        pool.addClass(inputStream.readAllBytes())
+    @Test
+    fun `add class from bytearray`() {
+        pool.addClass(ClassPoolTest::class.java.getResource("/Walrus.class").readBytes())
+        assertTrue { pool.size == 1 }
     }
 
-    init {
-        classes.forEach { loadClass(it) }
-    }
+    @Test
+    fun `add classes from jar`() {
 
-    companion object {
-        private val classes = arrayOf(
-            "CannedWalrusFood.class",
-            "FeedsWalrus.class",
-            "Food.class",
-            "GaryTheWalrus.class",
-            "OpensCan.class",
-            "Walrus.class",
-            "WalrusFood.class"
-        )
     }
 }
