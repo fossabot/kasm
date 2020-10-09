@@ -23,6 +23,7 @@ import org.objectweb.asm.Type
 import org.spectralpowered.kasm.core.code.Code
 import org.spectralpowered.kasm.core.code.Instruction
 import org.spectralpowered.kasm.core.code.Label
+import org.spectralpowered.kasm.core.code.LineNumber
 import org.objectweb.asm.Label as AsmLabel
 
 /**
@@ -105,6 +106,10 @@ class Method(val owner: ClassFile) : MethodVisitor(ASM9) {
 
     override fun visitLabel(label: AsmLabel) {
         code.add(code.findLabel(label))
+    }
+
+    override fun visitLineNumber(line: Int, start: AsmLabel) {
+        code.add(LineNumber(code, line, code.findLabel(start)))
     }
 
     override fun visitInsn(opcode: Int) {
