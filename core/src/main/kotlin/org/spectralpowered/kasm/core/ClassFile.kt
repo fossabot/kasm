@@ -18,6 +18,8 @@
 package org.spectralpowered.kasm.core
 
 import org.objectweb.asm.ClassVisitor
+import org.objectweb.asm.FieldVisitor
+import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes.ASM9
 import org.objectweb.asm.Type
 
@@ -66,7 +68,17 @@ class ClassFile : ClassVisitor(ASM9) {
     /**
      * The ASM object [Type].
      */
-    val type: Type by lazy { Type.getObjectType(name) }
+    val type: Type get() = Type.getObjectType(name)
+
+    /**
+     * The methods contained in this class.
+     */
+    var methods = mutableListOf<Method>()
+
+    /**
+     * The fields contained in this class.
+     */
+    var fields = mutableListOf<Field>()
 
     /*
      * VISITOR METHODS
@@ -89,6 +101,30 @@ class ClassFile : ClassVisitor(ASM9) {
 
     override fun visitSource(source: String, debug: String?) {
         this.sourceFile = source
+    }
+
+    override fun visitMethod(
+            access: Int,
+            name: String,
+            desc: String,
+            signature: String?,
+            exceptions: Array<String>
+    ): MethodVisitor {
+        val method = Method(this, access, name, desc)
+        methods.add(method)
+        return method
+    }
+
+    override fun visitField(
+            access: Int,
+            name: String,
+            desc: String,
+            signature: String?,
+            value: Any?
+    ): FieldVisitor {
+        val field = Field(this, access, name, desc, value)
+        fields.add(field)
+        return field
     }
 
     override fun visitEnd() {

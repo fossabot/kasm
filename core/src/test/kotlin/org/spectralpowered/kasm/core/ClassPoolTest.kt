@@ -17,6 +17,7 @@
 
 package org.spectralpowered.kasm.core
 
+import io.mockk.*
 import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue
 
@@ -25,13 +26,15 @@ class ClassPoolTest {
     val pool = ClassPool()
 
     @Test
-    fun `add class from bytearray`() {
-        pool.addClass(ClassPoolTest::class.java.getResource("/Walrus.class").readBytes())
+    fun `add class`() {
+        assertTrue { pool.size == 0 }
+
+        val cls = mockk<ClassFile>()
+        every { cls.name } returns "testClass"
+        every { cls setProperty "pool" value any<ClassPool>() } just runs
+
+        pool.addClass(cls)
+
         assertTrue { pool.size == 1 }
-    }
-
-    @Test
-    fun `add classes from jar`() {
-
     }
 }

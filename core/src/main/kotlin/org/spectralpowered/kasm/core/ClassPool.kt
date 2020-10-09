@@ -48,8 +48,19 @@ class ClassPool {
 
         reader.accept(classFile, ClassReader.SKIP_FRAMES)
 
-        classMap[classFile.name] = classFile
-        return classFile
+        return addClass(classFile)
+    }
+
+    /**
+     * Adds a class file to the pool.
+     *
+     * @param element ClassFile
+     * @return ClassFile
+     */
+    fun addClass(element: ClassFile): ClassFile {
+        element.pool = this
+        classMap[element.name] = element
+        return element
     }
 
     /**
