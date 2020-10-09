@@ -18,6 +18,7 @@
 package org.spectralpowered.kasm.core.code
 
 import org.spectralpowered.kasm.core.Method
+import org.objectweb.asm.Label as AsmLabel
 
 /**
  * Represents the bytecode instructions which belong in a method.
@@ -31,6 +32,11 @@ class Code(val method: Method) : Iterable<Instruction> {
      * The cached list of instruction to speed up getting instruction indexes.
      */
     private var cache = listOf<Instruction>()
+
+    /**
+     * A map to ASM labels for the spectral kasm labels.
+     */
+    private val labelMap = mutableMapOf<AsmLabel, Label>()
 
     /**
      * The maximum number of stack entries in the code object.
@@ -214,5 +220,27 @@ class Code(val method: Method) : Iterable<Instruction> {
         while(it.hasNext()) {
             action(it.next())
         }
+    }
+
+    /**
+     * Finds a [Label] from the label map. if nothing is found, a new label instance is created.
+     *
+     * @param label Label
+     * @return Label
+     */
+    fun findLabel(label: AsmLabel): Label {
+        var found = labelMap[label]
+        if(found == null) {
+            found = Label(this, label)
+            labelMap[label] = found
+        }
+
+        /*
+         * Update the label id
+         */
+        val index = labelMap.values.indexOf(found)
+        found.id = index
+
+        return found
     }
 }

@@ -22,6 +22,8 @@ import org.objectweb.asm.Opcodes.ASM9
 import org.objectweb.asm.Type
 import org.spectralpowered.kasm.core.code.Code
 import org.spectralpowered.kasm.core.code.Instruction
+import org.spectralpowered.kasm.core.code.Label
+import org.objectweb.asm.Label as AsmLabel
 
 /**
  * Represents a Java method which belongs in a class file.
@@ -99,6 +101,10 @@ class Method(val owner: ClassFile) : MethodVisitor(ASM9) {
         /*
          * Nothing to do.
          */
+    }
+
+    override fun visitLabel(label: AsmLabel) {
+        code.add(code.findLabel(label))
     }
 
     override fun visitInsn(opcode: Int) {
