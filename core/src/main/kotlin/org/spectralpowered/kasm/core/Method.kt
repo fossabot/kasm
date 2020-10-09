@@ -20,6 +20,8 @@ package org.spectralpowered.kasm.core
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes.ASM9
 import org.objectweb.asm.Type
+import org.spectralpowered.kasm.core.code.Code
+import org.spectralpowered.kasm.core.code.Instruction
 
 /**
  * Represents a Java method which belongs in a class file.
@@ -70,6 +72,11 @@ class Method(val owner: ClassFile) : MethodVisitor(ASM9) {
     }
 
     /**
+     * The code block for the method.
+     */
+    var code: Code = Code(this)
+
+    /**
      * The ASM [Type] of this method.
      */
     val type get() = Type.getMethodType(desc)
@@ -87,6 +94,21 @@ class Method(val owner: ClassFile) : MethodVisitor(ASM9) {
     /*
      * VISITOR METHODS
      */
+
+    override fun visitCode() {
+        /*
+         * Nothing to do.
+         */
+    }
+
+    override fun visitInsn(opcode: Int) {
+        code.add(Instruction(code, opcode))
+    }
+
+    override fun visitMaxs(maxStack: Int, maxLocals: Int) {
+        code.maxStack = maxStack
+        code.maxLocals = maxLocals
+    }
 
     override fun visitEnd() {
         /*

@@ -108,7 +108,7 @@ class ClassFile : ClassVisitor(ASM9) {
             name: String,
             desc: String,
             signature: String?,
-            exceptions: Array<String>
+            exceptions: Array<String>?
     ): MethodVisitor {
         val method = Method(this, access, name, desc)
         methods.add(method)

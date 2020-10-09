@@ -19,6 +19,7 @@ package org.spectralpowered.kasm.core
 
 import org.objectweb.asm.ClassReader
 import java.io.File
+import java.io.FileNotFoundException
 import java.util.jar.JarFile
 
 /**
@@ -69,6 +70,10 @@ class ClassPool {
      * @param file File
      */
     fun addJar(file: File) {
+        if(!file.exists()) {
+            throw FileNotFoundException("Unable to located Jar file: ${file.path}")
+        }
+
        JarFile(file).use { jar ->
            jar.entries().asSequence()
                    .filter { it.name.endsWith(".class") }
