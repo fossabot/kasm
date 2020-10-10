@@ -110,8 +110,8 @@ class Field(val owner: ClassFile) : FieldVisitor(ASM9) {
      *
      * @param visitor FieldVisitor
      */
-    fun accept(visitor: ClassVisitor) {
-        visitor.visitField(accessFlags, name, desc, null, value)
+    fun accept(visitor: FieldVisitor) {
+        visitor.visitEnd()
     }
 
     override fun toString(): String {

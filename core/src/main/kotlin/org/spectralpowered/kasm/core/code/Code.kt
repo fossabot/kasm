@@ -63,12 +63,12 @@ class Code(val method: Method) : Iterable<Instruction> {
     /**
      * The first instruction in the code.
      */
-    lateinit var first: Instruction
+    var first: Instruction? = null
 
     /**
      * The last instruction in the code.
      */
-    lateinit var last: Instruction
+    var last: Instruction? = null
 
     /**
      * Gets a [List] of [Instruction] objects contained in this code object.
@@ -80,7 +80,7 @@ class Code(val method: Method) : Iterable<Instruction> {
         var index = 0
         var current: Instruction? = first
         while(current != null) {
-            list[index] = current
+            list.add(index, current)
             current.index = ++index
             current = current.next
         }
@@ -152,11 +152,11 @@ class Code(val method: Method) : Iterable<Instruction> {
     fun add(insn: Instruction) {
        ++size
 
-        if(!::last.isInitialized) {
+        if(last == null) {
             first = insn
             last = insn
         } else {
-            last.next = insn
+            last!!.next = insn
             insn.prev = last
         }
 
@@ -173,11 +173,11 @@ class Code(val method: Method) : Iterable<Instruction> {
     fun insert(insn: Instruction) {
         ++size
 
-        if(!::first.isInitialized) {
+        if(first == null) {
             first = insn
             last = insn
         } else {
-            first.prev = insn
+            first!!.prev = insn
             insn.next = first
         }
 
@@ -196,7 +196,11 @@ class Code(val method: Method) : Iterable<Instruction> {
         val next = insn.next
         val prev = insn.prev
         if(next == null) {
-            if(prev != null) {
+            if(prev == null) {
+                first = null
+                last = null
+            }
+            else {
                 prev.next = null
                 last = prev
             }
@@ -249,11 +253,20 @@ class Code(val method: Method) : Iterable<Instruction> {
          */
         visitor.visitCode()
 
-        /*
-         * Visit each instruction.
-         */
-        forEach { insn ->
-            insn.accept(visitor)
+        if(size > 0) {
+            /*
+             * Visit each try-catch block
+             */
+            tryCatchBlocks.forEach { block ->
+                block.accept(visitor)
+            }
+
+            /*
+             * Visit each instruction.
+             */
+            forEach { insn ->
+                insn.accept(visitor)
+            }
         }
 
         /*

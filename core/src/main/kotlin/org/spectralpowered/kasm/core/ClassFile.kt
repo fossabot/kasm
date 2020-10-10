@@ -17,11 +17,8 @@
 
 package org.spectralpowered.kasm.core
 
-import org.objectweb.asm.ClassVisitor
-import org.objectweb.asm.FieldVisitor
-import org.objectweb.asm.MethodVisitor
+import org.objectweb.asm.*
 import org.objectweb.asm.Opcodes.ASM9
-import org.objectweb.asm.Type
 
 /**
  * Represents a Java class file's bytecode model.
@@ -79,6 +76,39 @@ class ClassFile : ClassVisitor(ASM9) {
      * The fields contained in this class.
      */
     var fields = mutableListOf<Field>()
+
+    /**
+     * Finds a [Method] in this class by name and descriptor.
+     *
+     * @param name String
+     * @param desc String
+     * @return Method?
+     */
+    fun findMethod(name: String, desc: String): Method? {
+        return this.methods.firstOrNull { it.name == name && it.desc == desc }
+    }
+
+    /**
+     * Finds a [Field] in this class by name and descriptor.
+     *
+     * @param name String
+     * @param desc String
+     * @return Field?
+     */
+    fun findField(name: String, desc: String): Field? {
+        return this.fields.firstOrNull { it.name == name && it.desc == desc }
+    }
+
+    /**
+     * Converts this class file to bytecode as raw [ByteArray] data.
+     *
+     * @return ByteArray
+     */
+    fun toByteCode(): ByteArray {
+        val writer = ClassWriter(ClassWriter.COMPUTE_MAXS)
+        this.accept(writer)
+        return writer.toByteArray()
+    }
 
     /*
      * VISITOR METHODS
@@ -139,7 +169,36 @@ class ClassFile : ClassVisitor(ASM9) {
      * @param visitor ClassVisitor
      */
     fun accept(visitor: ClassVisitor) {
+        /*
+         * Visit the general information.
+         */
+        visitor.visit(this.version, this.accessFlags, this.name, null, this.superClass, this.interfaces.toTypedArray())
 
+        /*
+         * Visit the source file.
+         */
+        visitor.visitSource(this.sourceFile, null)
+
+        /*
+         * Visit each method.
+         */
+        methods.forEach { method ->
+            val mv = visitor.visitMethod(method.accessFlags, method.name, method.desc, null, arrayOf())
+            method.accept(mv)
+        }
+
+        /*
+         * Visit each field
+         */
+        fields.forEach { field ->
+            val fv = visitor.visitField(field.accessFlags, field.name, field.desc, null, field.value)
+            field.accept(fv)
+        }
+
+        /*
+         * Visit the end.
+         */
+        visitor.visitEnd()
     }
 
     override fun toString(): String {

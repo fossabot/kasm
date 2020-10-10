@@ -18,9 +18,13 @@
 package org.spectralpowered.kasm.core
 
 import org.objectweb.asm.ClassReader
+import org.objectweb.asm.ClassWriter
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.util.jar.JarEntry
 import java.util.jar.JarFile
+import java.util.jar.JarOutputStream
 
 /**
  * Represents a collection of [ClassFile] objects.
@@ -81,6 +85,30 @@ class ClassPool {
                        this.addClass(jar.getInputStream(entry).readAllBytes())
                    }
        }
+    }
+
+    /**
+     * Saves the current class pool to a Jar file.
+     *
+     * @param file File
+     */
+    fun saveJar(file: File) {
+        if(file.exists()) {
+            file.delete()
+        }
+
+        val jos = JarOutputStream(FileOutputStream(file))
+
+        forEach { classFile ->
+            val entry = JarEntry(classFile.name + ".class")
+            val bytes = classFile.toByteCode()
+
+            jos.putNextEntry(entry)
+            jos.write(bytes)
+            jos.closeEntry()
+        }
+
+        jos.close()
     }
 
     /**
