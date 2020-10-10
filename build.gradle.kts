@@ -9,11 +9,17 @@ tasks.withType<Wrapper> {
     gradleVersion = Project.gradleVersion
 }
 
+detekt {
+    failFast = true
+    buildUponDefaultConfig = true
+    config = files("$projectDir/config/detekt.yml")
+}
+
+
 allprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
-    apply(plugin = Plugin.detekt)
 
-    group = "org.spectralpowered.kasm"
+    group = "org.spectral.kasm"
     version = Project.version
 
     repositories {
@@ -28,16 +34,16 @@ allprojects {
         implementation(Library.asmCommons)
         implementation(Library.asmUtil)
         testImplementation(Library.junitEngine)
+        testImplementation(Library.junitApi)
+        testImplementation(Library.mockk)
+        testImplementation(kotlin("test"))
+    }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
     }
 
     tasks.withType<KotlinCompile> {
         kotlinOptions.jvmTarget = Project.jvmVersion
     }
-
-    detekt {
-        failFast = true
-        buildUponDefaultConfig = true
-        config = files("$projectDir/config/detekt.yml")
-    }
-
 }
