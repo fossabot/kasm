@@ -157,6 +157,16 @@ class Method(val owner: ClassFile) : MethodVisitor(ASM9) {
         code.add(LookupSwitchInstruction(code, code.findLabel(dflt), keys.toMutableList(), labels.map { code.findLabel(it) }.toMutableList()))
     }
 
+    override fun visitMethodInsn(
+        opcode: Int,
+        owner: String,
+        name: String,
+        desc: String,
+        isInterface: Boolean
+    ) {
+        code.add(MethodInstruction(code, opcode, owner, name, desc, isInterface))
+    }
+
     override fun visitMaxs(maxStack: Int, maxLocals: Int) {
         code.maxStack = maxStack
         code.maxLocals = maxLocals
