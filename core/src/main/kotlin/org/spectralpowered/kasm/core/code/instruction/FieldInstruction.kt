@@ -29,6 +29,6 @@ class FieldInstruction(code: Code, opcode: Int, var owner: String, var name: Str
     }
 
     override fun toString(): String {
-        return "${Printer.OPCODES[opcode]}:$owner.$name"
+        return "${Printer.OPCODES[opcode]} $owner.$name"
     }
 }

@@ -35,6 +35,6 @@ class LdcInstruction(code: Code, var cst: Any) : Instruction(code, Opcodes.LDC) 
     }
 
     override fun toString(): String {
-        return "LDC:$cst"
+        return "LDC $cst"
     }
 }

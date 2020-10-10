@@ -18,17 +18,17 @@
 package org.spectralpowered.kasm.core.code.instruction
 
 import org.objectweb.asm.MethodVisitor
-import org.objectweb.asm.util.Printer
+import org.objectweb.asm.Opcodes
 import org.spectralpowered.kasm.core.code.Code
 import org.spectralpowered.kasm.core.code.Instruction
 
-class IntInstruction(code: Code, opcode: Int, var operand: Int) : Instruction(code, opcode) {
+class MultiNewArrayInstruction(code: Code, var desc: String, var dims: Int) : Instruction(code, Opcodes.MULTIANEWARRAY) {
 
     override fun accept(visitor: MethodVisitor) {
-        visitor.visitIntInsn(opcode, operand)
+        visitor.visitMultiANewArrayInsn(desc, dims)
     }
 
     override fun toString(): String {
-        return "${Printer.OPCODES[opcode]} $operand"
+        return "MULTIANEWARRAY $desc $dims"
     }
 }

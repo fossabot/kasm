@@ -29,6 +29,6 @@ class IncInstruction(code: Code, var slot: Int, var inc: Int) : Instruction(code
     }
 
     override fun toString(): String {
-        return "IINC:$slot:$inc"
+        return "IINC $slot $inc"
     }
 }
