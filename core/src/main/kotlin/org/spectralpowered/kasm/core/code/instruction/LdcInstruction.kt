@@ -23,7 +23,7 @@ import org.objectweb.asm.Type
 import org.spectralpowered.kasm.core.code.Code
 import org.spectralpowered.kasm.core.code.Instruction
 
-class LdcInstruction(code: Code, val cst: Any) : Instruction(code, Opcodes.LDC) {
+class LdcInstruction(code: Code, var cst: Any) : Instruction(code, Opcodes.LDC) {
 
     /**
      * The LDC constant type.

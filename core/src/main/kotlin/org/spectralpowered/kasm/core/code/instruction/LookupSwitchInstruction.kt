@@ -18,18 +18,23 @@
 package org.spectralpowered.kasm.core.code.instruction
 
 import org.objectweb.asm.MethodVisitor
-import org.objectweb.asm.util.Printer
+import org.objectweb.asm.Opcodes
 import org.spectralpowered.kasm.core.code.Code
 import org.spectralpowered.kasm.core.code.Instruction
 import org.spectralpowered.kasm.core.code.Label
 
-class JumpInstruction(code: Code, opcode: Int, var label: Label) : Instruction(code, opcode) {
+class LookupSwitchInstruction(
+    code: Code,
+    var default: Label,
+    var keys: MutableList<Int>,
+    var labels: MutableList<Label>
+) : Instruction(code, Opcodes.LOOKUPSWITCH) {
 
     override fun accept(visitor: MethodVisitor) {
-        visitor.visitJumpInsn(opcode, label.label)
+        visitor.visitLookupSwitchInsn(default.label, keys.toIntArray(), labels.map { it.label }.toTypedArray())
     }
 
     override fun toString(): String {
-        return "${Printer.OPCODES[opcode]} $label"
+        return "LOOKUPSWITCH"
     }
 }

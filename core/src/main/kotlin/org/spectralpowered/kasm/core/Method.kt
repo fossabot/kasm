@@ -149,6 +149,14 @@ class Method(val owner: ClassFile) : MethodVisitor(ASM9) {
         code.add(LdcInstruction(code, value))
     }
 
+    override fun visitLookupSwitchInsn(
+        dflt: AsmLabel,
+        keys: IntArray,
+        labels: Array<AsmLabel>
+    ) {
+        code.add(LookupSwitchInstruction(code, code.findLabel(dflt), keys.toMutableList(), labels.map { code.findLabel(it) }.toMutableList()))
+    }
+
     override fun visitMaxs(maxStack: Int, maxLocals: Int) {
         code.maxStack = maxStack
         code.maxLocals = maxLocals
