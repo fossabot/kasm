@@ -30,6 +30,6 @@ class LineNumber(code: Code, val line: Int, val label: Label) : Instruction(code
     }
 
     override fun toString(): String {
-        return "LINENUMBER $line"
+        return "LINENUMBER:$line"
     }
 }

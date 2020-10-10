@@ -29,6 +29,6 @@ class IntInstruction(code: Code, opcode: Int, var operand: Int) : Instruction(co
     }
 
     override fun toString(): String {
-        return "${Printer.OPCODES[opcode]} $operand"
+        return "${Printer.OPCODES[opcode]}:$operand"
     }
 }

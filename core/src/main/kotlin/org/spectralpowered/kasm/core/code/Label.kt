@@ -31,6 +31,6 @@ class Label(code: Code, val label: Label) : Instruction(code, -1) {
     }
 
     override fun toString(): String {
-        return "LABEL #$id"
+        return "LABEL:$id"
     }
 }

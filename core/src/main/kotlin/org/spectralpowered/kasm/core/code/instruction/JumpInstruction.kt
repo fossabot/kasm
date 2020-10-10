@@ -18,17 +18,18 @@
 package org.spectralpowered.kasm.core.code.instruction
 
 import org.objectweb.asm.MethodVisitor
-import org.objectweb.asm.Opcodes
+import org.objectweb.asm.util.Printer
 import org.spectralpowered.kasm.core.code.Code
 import org.spectralpowered.kasm.core.code.Instruction
+import org.spectralpowered.kasm.core.code.Label
 
-class IncInstruction(code: Code, var slot: Int, var inc: Int) : Instruction(code, Opcodes.IINC) {
+class JumpInstruction(code: Code, opcode: Int, val label: Label) : Instruction(code, opcode) {
 
     override fun accept(visitor: MethodVisitor) {
-        visitor.visitIincInsn(slot, inc)
+        visitor.visitJumpInsn(opcode, label.label)
     }
 
     override fun toString(): String {
-        return "IINC:$slot:$inc"
+        return "${Printer.OPCODES[opcode]} $label"
     }
 }
