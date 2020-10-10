@@ -184,6 +184,10 @@ class Method(val owner: ClassFile) : MethodVisitor(ASM9) {
         code.add(TypeInstruction(code, opcode, type))
     }
 
+    override fun visitVarInsn(opcode: Int, slot: Int) {
+        code.add(LocalVarInstruction(code, opcode, slot))
+    }
+
     override fun visitMaxs(maxStack: Int, maxLocals: Int) {
         code.maxStack = maxStack
         code.maxLocals = maxLocals
