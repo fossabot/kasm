@@ -180,6 +180,10 @@ class Method(val owner: ClassFile) : MethodVisitor(ASM9) {
         code.add(TableSwitchInstruction(code, min, max, code.findLabel(dflt), labels.map { code.findLabel(it) }.toMutableList()))
     }
 
+    override fun visitTypeInsn(opcode: Int, type: String) {
+        code.add(TypeInstruction(code, opcode, type))
+    }
+
     override fun visitMaxs(maxStack: Int, maxLocals: Int) {
         code.maxStack = maxStack
         code.maxLocals = maxLocals
