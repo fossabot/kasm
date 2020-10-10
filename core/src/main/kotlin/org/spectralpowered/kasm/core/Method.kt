@@ -167,6 +167,19 @@ class Method(val owner: ClassFile) : MethodVisitor(ASM9) {
         code.add(MethodInstruction(code, opcode, owner, name, desc, isInterface))
     }
 
+    override fun visitMultiANewArrayInsn(desc: String, dims: Int) {
+        code.add(MultiNewArrayInstruction(code, desc, dims))
+    }
+
+    override fun visitTableSwitchInsn(
+        min: Int,
+        max: Int,
+        dflt: AsmLabel,
+        vararg labels: AsmLabel
+    ) {
+        code.add(TableSwitchInstruction(code, min, max, code.findLabel(dflt), labels.map { code.findLabel(it) }.toMutableList()))
+    }
+
     override fun visitMaxs(maxStack: Int, maxLocals: Int) {
         code.maxStack = maxStack
         code.maxLocals = maxLocals
