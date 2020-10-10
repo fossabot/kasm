@@ -22,7 +22,7 @@ import org.objectweb.asm.Opcodes
 import org.spectralpowered.kasm.core.code.Code
 import org.spectralpowered.kasm.core.code.Instruction
 
-class IncInstruction(code: Code, val slot: Int, val inc: Int) : Instruction(code, Opcodes.IINC) {
+class IncInstruction(code: Code, var slot: Int, var inc: Int) : Instruction(code, Opcodes.IINC) {
 
     override fun accept(visitor: MethodVisitor) {
         visitor.visitIincInsn(slot, inc)
