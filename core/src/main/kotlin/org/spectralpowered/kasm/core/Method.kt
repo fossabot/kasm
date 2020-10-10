@@ -154,7 +154,12 @@ class Method(val owner: ClassFile) : MethodVisitor(ASM9) {
         keys: IntArray,
         labels: Array<AsmLabel>
     ) {
-        code.add(LookupSwitchInstruction(code, code.findLabel(dflt), keys.toMutableList(), labels.map { code.findLabel(it) }.toMutableList()))
+        code.add(LookupSwitchInstruction(
+            code,
+            code.findLabel(dflt),
+            keys.toMutableList(),
+            labels.map { code.findLabel(it) }.toMutableList()
+        ))
     }
 
     override fun visitMethodInsn(
@@ -177,7 +182,13 @@ class Method(val owner: ClassFile) : MethodVisitor(ASM9) {
         dflt: AsmLabel,
         vararg labels: AsmLabel
     ) {
-        code.add(TableSwitchInstruction(code, min, max, code.findLabel(dflt), labels.map { code.findLabel(it) }.toMutableList()))
+        code.add(TableSwitchInstruction(
+            code,
+            min,
+            max,
+            code.findLabel(dflt),
+            labels.map { code.findLabel(it) }.toMutableList()
+        ))
     }
 
     override fun visitTypeInsn(opcode: Int, type: String) {

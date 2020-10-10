@@ -22,7 +22,11 @@ import org.objectweb.asm.Opcodes
 import org.spectralpowered.kasm.core.code.Code
 import org.spectralpowered.kasm.core.code.Instruction
 
-class MultiNewArrayInstruction(code: Code, var desc: String, var dims: Int) : Instruction(code, Opcodes.MULTIANEWARRAY) {
+class MultiNewArrayInstruction(
+    code: Code,
+    var desc: String,
+    var dims: Int
+) : Instruction(code, Opcodes.MULTIANEWARRAY) {
 
     override fun accept(visitor: MethodVisitor) {
         visitor.visitMultiANewArrayInsn(desc, dims)

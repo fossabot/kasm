@@ -22,7 +22,13 @@ import org.objectweb.asm.util.Printer
 import org.spectralpowered.kasm.core.code.Code
 import org.spectralpowered.kasm.core.code.Instruction
 
-class FieldInstruction(code: Code, opcode: Int, var owner: String, var name: String, var desc: String) : Instruction(code, opcode) {
+class FieldInstruction(
+    code: Code,
+    opcode: Int,
+    var owner: String,
+    var name: String,
+    var desc: String
+) : Instruction(code, opcode) {
 
     override fun accept(visitor: MethodVisitor) {
         visitor.visitFieldInsn(opcode, owner, name, desc)
