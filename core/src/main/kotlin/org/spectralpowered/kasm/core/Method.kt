@@ -132,6 +132,23 @@ class Method(val owner: ClassFile) : MethodVisitor(ASM9) {
          */
     }
 
+    /**
+     * Makes a provided visitor visit this method.
+     *
+     * @param visitor MethodVisitor
+     */
+    fun accept(visitor: MethodVisitor) {
+        /*
+         * Visit the code object
+         */
+        code.accept(visitor)
+
+        /*
+         * Visit the end
+         */
+        visitor.visitEnd()
+    }
+
     override fun toString(): String {
         return "$owner.$name$desc"
     }

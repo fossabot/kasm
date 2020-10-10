@@ -17,6 +17,7 @@
 
 package org.spectralpowered.kasm.core.code
 
+import org.objectweb.asm.MethodVisitor
 import org.spectralpowered.kasm.core.Method
 import org.objectweb.asm.Label as AsmLabel
 
@@ -242,5 +243,29 @@ class Code(val method: Method) : Iterable<Instruction> {
         found.id = index
 
         return found
+    }
+
+    /**
+     * Makes a provided visitor visit this code object.
+     *
+     * @param visitor MethodVisitor
+     */
+    fun accept(visitor: MethodVisitor) {
+        /*
+         * Visit the code
+         */
+        visitor.visitCode()
+
+        /*
+         * Visit each instruction.
+         */
+        this.forEach { insn ->
+            insn.accept(visitor)
+        }
+
+        /*
+         * Visit the maxes
+         */
+        visitor.visitMaxs(maxStack, maxLocals)
     }
 }
