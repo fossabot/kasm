@@ -19,7 +19,7 @@ detekt {
 allprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
 
-    group = "org.spectralpowered.kasm"
+    group = "org.spectral.kasm"
     version = Project.version
 
     repositories {

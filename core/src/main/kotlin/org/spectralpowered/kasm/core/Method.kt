@@ -24,6 +24,7 @@ import org.spectralpowered.kasm.core.code.Code
 import org.spectralpowered.kasm.core.code.Instruction
 import org.spectralpowered.kasm.core.code.Label
 import org.spectralpowered.kasm.core.code.LineNumber
+import org.spectralpowered.kasm.core.code.instruction.IntInstruction
 import org.objectweb.asm.Label as AsmLabel
 
 /**
@@ -114,6 +115,10 @@ class Method(val owner: ClassFile) : MethodVisitor(ASM9) {
 
     override fun visitInsn(opcode: Int) {
         code.add(Instruction(code, opcode))
+    }
+
+    override fun visitIntInsn(opcode: Int, operand: Int) {
+        code.add(IntInstruction(code, opcode, operand))
     }
 
     override fun visitMaxs(maxStack: Int, maxLocals: Int) {
