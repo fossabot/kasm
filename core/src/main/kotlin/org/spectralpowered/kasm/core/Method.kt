@@ -20,10 +20,7 @@ package org.spectralpowered.kasm.core
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes.ASM9
 import org.objectweb.asm.Type
-import org.spectralpowered.kasm.core.code.Code
-import org.spectralpowered.kasm.core.code.Instruction
-import org.spectralpowered.kasm.core.code.Label
-import org.spectralpowered.kasm.core.code.LineNumber
+import org.spectralpowered.kasm.core.code.*
 import org.spectralpowered.kasm.core.code.instruction.IntInstruction
 import org.objectweb.asm.Label as AsmLabel
 
@@ -93,7 +90,7 @@ class Method(val owner: ClassFile) : MethodVisitor(ASM9) {
     /**
      * The method argument ASM [Type]s
      */
-    val argumentTypes get() = type.argumentTypes
+    val argTypes get() = type.argumentTypes
 
     /*
      * VISITOR METHODS
@@ -103,6 +100,21 @@ class Method(val owner: ClassFile) : MethodVisitor(ASM9) {
         /*
          * Nothing to do.
          */
+    }
+
+    override fun visitTryCatchBlock(
+        start: AsmLabel,
+        end: AsmLabel,
+        handler: AsmLabel,
+        type: String?
+    ) {
+        code.tryCatchBlocks.add(TryCatchBlock(
+            code,
+            code.findLabel(start),
+            code.findLabel(end),
+            code.findLabel(handler),
+            type?.let { Type.getObjectType(it) }
+        ))
     }
 
     override fun visitLabel(label: AsmLabel) {

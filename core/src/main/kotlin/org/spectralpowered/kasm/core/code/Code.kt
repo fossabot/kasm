@@ -40,6 +40,11 @@ class Code(val method: Method) : Iterable<Instruction> {
     private val labelMap = mutableMapOf<AsmLabel, Label>()
 
     /**
+     * A list of try-catch block objects in the code.
+     */
+    var tryCatchBlocks = mutableListOf<TryCatchBlock>()
+
+    /**
      * The maximum number of stack entries in the code object.
      */
     var maxStack = 0
@@ -212,18 +217,6 @@ class Code(val method: Method) : Iterable<Instruction> {
     }
 
     /**
-     * Perform an action for each instruction in the code object list.
-     *
-     * @param action Function1<Instruction, Unit>
-     */
-    fun forEach(action: (Instruction) -> Unit) {
-        val it = this.iterator()
-        while(it.hasNext()) {
-            action(it.next())
-        }
-    }
-
-    /**
      * Finds a [Label] from the label map. if nothing is found, a new label instance is created.
      *
      * @param label Label
@@ -259,7 +252,7 @@ class Code(val method: Method) : Iterable<Instruction> {
         /*
          * Visit each instruction.
          */
-        this.forEach { insn ->
+        forEach { insn ->
             insn.accept(visitor)
         }
 
