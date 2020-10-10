@@ -3,7 +3,6 @@
 #
 # If you are contributing to the project, your code MUST abide by this configuration.
 # No PR's will be accepted with changes to this file unless you are a developer of the organization.
-
 build:
   maxIssues: 0
   excludeCorrectable: false
