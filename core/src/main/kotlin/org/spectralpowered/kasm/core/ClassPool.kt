@@ -18,7 +18,6 @@
 package org.spectralpowered.kasm.core
 
 import org.objectweb.asm.ClassReader
-import org.objectweb.asm.ClassWriter
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -109,6 +108,23 @@ class ClassPool {
         }
 
         jos.close()
+    }
+
+    /**
+     * Creates a class loader from the classes inside of the current
+     * class pool.
+     *
+     * @return ClassLoader
+     */
+    fun createClassloader(): ClassLoader {
+        val classloader = BytecodeClassLoader(ClassLoader.getSystemClassLoader())
+
+        this.forEach { cls ->
+            val bytes = cls.toByteCode()
+            classloader.addClass(cls.name + ".class", bytes)
+        }
+
+        return classloader
     }
 
     /**
