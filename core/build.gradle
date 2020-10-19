@@ -1,0 +1,25 @@
+plugins {
+    id 'maven-publish'
+}
+
+publishing {
+    repositories {
+        mavenLocal()
+        maven {
+            url 'https://repo.spectralpowered.org/'
+            credentials {
+                username = System.getenv("MAVEN_USER")
+                password = System.getenv("MAVEN_TOKEN")
+            }
+        }
+    }
+
+    publications {
+        maven(MavenPublication) {
+            groupId = "org.spectral.kasm"
+            artifactId = "core"
+            version = project.version
+            from components.java
+        }
+    }
+}
