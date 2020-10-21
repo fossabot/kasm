@@ -15,13 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.spectralpowered.kasm.core
+package org.spectral.kasm.core
 
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes.ASM9
 import org.objectweb.asm.Type
-import org.spectralpowered.kasm.core.code.*
-import org.spectralpowered.kasm.core.code.instruction.*
+import org.spectral.kasm.core.code.Code
+import org.spectral.kasm.core.code.Instruction
+import org.spectral.kasm.core.code.LineNumber
+import org.spectral.kasm.core.code.TryCatchBlock
+import org.spectral.kasm.core.code.instruction.*
 import org.objectweb.asm.Label as AsmLabel
 
 /**

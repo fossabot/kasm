@@ -15,20 +15,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.spectralpowered.kasm.core.code.instruction
+package org.spectral.kasm.core.code.instruction
 
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.util.Printer
-import org.spectralpowered.kasm.core.code.Code
-import org.spectralpowered.kasm.core.code.Instruction
+import org.spectral.kasm.core.code.Code
+import org.spectral.kasm.core.code.Instruction
 
-class TypeInstruction(code: Code, opcode: Int, var desc: String) : Instruction(code, opcode) {
+class LocalVarInstruction(code: Code, opcode: Int, var slot: Int) : Instruction(code, opcode) {
 
     override fun accept(visitor: MethodVisitor) {
-        visitor.visitTypeInsn(opcode, desc)
+        visitor.visitVarInsn(opcode, slot)
     }
 
     override fun toString(): String {
-        return "${Printer.OPCODES[opcode]} $desc"
+        return "${Printer.OPCODES[opcode]} $slot"
     }
 }

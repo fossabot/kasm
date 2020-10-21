@@ -15,26 +15,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.spectralpowered.kasm.core.code.instruction
+package org.spectral.kasm.core.code.instruction
 
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
-import org.spectralpowered.kasm.core.code.Code
-import org.spectralpowered.kasm.core.code.Instruction
-import org.spectralpowered.kasm.core.code.Label
+import org.spectral.kasm.core.code.Code
+import org.spectral.kasm.core.code.Instruction
 
-class LookupSwitchInstruction(
-    code: Code,
-    var default: Label,
-    var keys: MutableList<Int>,
-    var labels: MutableList<Label>
-) : Instruction(code, Opcodes.LOOKUPSWITCH) {
+class IncInstruction(code: Code, var slot: Int, var inc: Int) : Instruction(code, Opcodes.IINC) {
 
     override fun accept(visitor: MethodVisitor) {
-        visitor.visitLookupSwitchInsn(default.label, keys.toIntArray(), labels.map { it.label }.toTypedArray())
+        visitor.visitIincInsn(slot, inc)
     }
 
     override fun toString(): String {
-        return "LOOKUPSWITCH"
+        return "IINC $slot $inc"
     }
 }

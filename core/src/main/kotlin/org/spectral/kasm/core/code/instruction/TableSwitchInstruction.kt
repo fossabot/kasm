@@ -15,20 +15,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.spectralpowered.kasm.core.code.instruction
+package org.spectral.kasm.core.code.instruction
 
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
-import org.spectralpowered.kasm.core.code.Code
-import org.spectralpowered.kasm.core.code.Instruction
+import org.spectral.kasm.core.code.Code
+import org.spectral.kasm.core.code.Instruction
+import org.spectral.kasm.core.code.Label
 
-class IncInstruction(code: Code, var slot: Int, var inc: Int) : Instruction(code, Opcodes.IINC) {
+class TableSwitchInstruction(
+    code: Code,
+    var min: Int,
+    var max: Int,
+    var default: Label,
+    var labels: MutableList<Label>
+) : Instruction(code, Opcodes.TABLESWITCH) {
 
     override fun accept(visitor: MethodVisitor) {
-        visitor.visitIincInsn(slot, inc)
+        visitor.visitTableSwitchInsn(min, max, default.label, *labels.map { it.label }.toTypedArray())
     }
 
     override fun toString(): String {
-        return "IINC $slot $inc"
+        return "TABLESWITCH"
     }
 }

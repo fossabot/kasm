@@ -15,21 +15,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.spectralpowered.kasm.core.code.instruction
+package org.spectral.kasm.core.code.instruction
 
 import org.objectweb.asm.MethodVisitor
-import org.objectweb.asm.util.Printer
-import org.spectralpowered.kasm.core.code.Code
-import org.spectralpowered.kasm.core.code.Instruction
-import org.spectralpowered.kasm.core.code.Label
+import org.objectweb.asm.Opcodes
+import org.spectral.kasm.core.code.Code
+import org.spectral.kasm.core.code.Instruction
 
-class JumpInstruction(code: Code, opcode: Int, var label: Label) : Instruction(code, opcode) {
+class MultiNewArrayInstruction(
+    code: Code,
+    var desc: String,
+    var dims: Int
+) : Instruction(code, Opcodes.MULTIANEWARRAY) {
 
     override fun accept(visitor: MethodVisitor) {
-        visitor.visitJumpInsn(opcode, label.label)
+        visitor.visitMultiANewArrayInsn(desc, dims)
     }
 
     override fun toString(): String {
-        return "${Printer.OPCODES[opcode]} $label"
+        return "MULTIANEWARRAY $desc $dims"
     }
 }

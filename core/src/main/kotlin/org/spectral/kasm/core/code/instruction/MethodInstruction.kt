@@ -15,22 +15,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.spectralpowered.kasm.core.code
+package org.spectral.kasm.core.code.instruction
 
-import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
+import org.objectweb.asm.util.Printer
+import org.spectral.kasm.core.code.Code
+import org.spectral.kasm.core.code.Instruction
 
-class Label(code: Code, val label: Label) : Instruction(code, -1) {
-
-    constructor(code: Code) : this(code, Label())
-
-    var id: Int = 0
+class MethodInstruction(
+    code: Code,
+    opcode: Int,
+    var owner: String,
+    var name: String,
+    var desc: String,
+    var isInterface: Boolean
+) : Instruction(code, opcode) {
 
     override fun accept(visitor: MethodVisitor) {
-        visitor.visitLabel(label)
+        visitor.visitMethodInsn(opcode, owner, name, desc, isInterface)
     }
 
     override fun toString(): String {
-        return "LABEL:$id"
+        return "${Printer.OPCODES[opcode]} $owner.$method$desc"
     }
 }

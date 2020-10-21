@@ -15,39 +15,51 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.spectralpowered.kasm.core.code
+package org.spectral.kasm.core.code
 
 import org.objectweb.asm.MethodVisitor
-import org.objectweb.asm.Type
+import org.objectweb.asm.util.Printer
+import org.spectral.kasm.core.Method
 
 /**
- * Represents a Java try-catch block belonging to a method.
+ * Represents a Java bytecode instruction within a method.
  *
  * @property code Code
- * @property start The label this block starts at.
- * @property end The label this block ends at.
- * @property handler The label the catch handler starts at.
- * @property type The ASM type of the exception being caught.
+ * @property opcode Int
  * @constructor
  */
-class TryCatchBlock(
-    val code: Code,
-    val start: Label,
-    val end: Label,
-    val handler: Label,
-    val type: Type?
-) {
+open class Instruction(val code: Code, val opcode: Int) {
 
     /**
-     * Makes a provided visitor visit this try-catch block object.
+     * The method this instruction belongs to.
+     */
+    val method: Method get() = code.method
+
+    /**
+     * The index number this instruction sits in the list at.
+     */
+    var index: Int = -1
+
+    /**
+     * The previous instruction in the list.
+     */
+    var prev: Instruction? = null
+
+    /**
+     * The next instruction in the list.
+     */
+    var next: Instruction? = null
+
+    /**
+     * Makes a provided method visitor visit this instruction.
      *
      * @param visitor MethodVisitor
      */
-    fun accept(visitor: MethodVisitor) {
-       visitor.visitTryCatchBlock(start.label, end.label, handler.label, type?.internalName)
+    open fun accept(visitor: MethodVisitor) {
+        visitor.visitInsn(opcode)
     }
 
     override fun toString(): String {
-        return "TRYCATCH"
+        return if(opcode == -1) return "UNKNOWN" else Printer.OPCODES[opcode]
     }
 }

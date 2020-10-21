@@ -15,10 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.spectralpowered.kasm.core.code
+package org.spectral.kasm.core.code
 
 import org.objectweb.asm.MethodVisitor
-import org.spectralpowered.kasm.core.Method
+import org.spectral.kasm.core.Method
 import org.objectweb.asm.Label as AsmLabel
 
 /**

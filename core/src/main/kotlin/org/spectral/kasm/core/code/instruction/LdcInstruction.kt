@@ -15,20 +15,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.spectralpowered.kasm.core.code.instruction
+package org.spectral.kasm.core.code.instruction
 
 import org.objectweb.asm.MethodVisitor
-import org.objectweb.asm.util.Printer
-import org.spectralpowered.kasm.core.code.Code
-import org.spectralpowered.kasm.core.code.Instruction
+import org.objectweb.asm.Opcodes
+import org.objectweb.asm.Type
+import org.spectral.kasm.core.code.Code
+import org.spectral.kasm.core.code.Instruction
 
-class IntInstruction(code: Code, opcode: Int, var operand: Int) : Instruction(code, opcode) {
+class LdcInstruction(code: Code, var cst: Any) : Instruction(code, Opcodes.LDC) {
+
+    /**
+     * The LDC constant type.
+     */
+    val type get() = Type.getType(cst::class.java)
 
     override fun accept(visitor: MethodVisitor) {
-        visitor.visitIntInsn(opcode, operand)
+        visitor.visitLdcInsn(cst)
     }
 
     override fun toString(): String {
-        return "${Printer.OPCODES[opcode]} $operand"
+        return "LDC $cst"
     }
 }

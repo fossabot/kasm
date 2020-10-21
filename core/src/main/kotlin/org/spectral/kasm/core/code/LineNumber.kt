@@ -15,27 +15,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.spectralpowered.kasm.core.code.instruction
+package org.spectral.kasm.core.code
 
 import org.objectweb.asm.MethodVisitor
-import org.objectweb.asm.util.Printer
-import org.spectralpowered.kasm.core.code.Code
-import org.spectralpowered.kasm.core.code.Instruction
+import org.objectweb.asm.Label as AsmLabel
 
-class MethodInstruction(
-    code: Code,
-    opcode: Int,
-    var owner: String,
-    var name: String,
-    var desc: String,
-    var isInterface: Boolean
-) : Instruction(code, opcode) {
+/**
+ * Represents a line number instruction in a method.
+ */
+class LineNumber(code: Code, val line: Int, val label: Label) : Instruction(code, -1) {
 
     override fun accept(visitor: MethodVisitor) {
-        visitor.visitMethodInsn(opcode, owner, name, desc, isInterface)
+        visitor.visitLineNumber(line, label.label)
     }
 
     override fun toString(): String {
-        return "${Printer.OPCODES[opcode]} $owner.$method$desc"
+        return "LINENUMBER:$line"
     }
 }
