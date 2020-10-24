@@ -25,10 +25,23 @@ class BytecodeClassLoader(parent: ClassLoader) : ClassLoader(parent) {
 
     private val byteDataMap = hashMapOf<String, ByteArray>()
 
+    /**
+     * Adds / loads a class from the raw Bytecode into a JVM class object.
+     *
+     * @param name String
+     * @param bytes ByteArray
+     */
     fun addClass(name: String, bytes: ByteArray) {
         byteDataMap[name] = bytes
     }
 
+    /**
+     * Loads a class from the internal formatted name and builds a JVM [Class] object if
+     * any is found.
+     *
+     * @param name String
+     * @return Class<*>
+     */
     override fun loadClass(name: String): Class<*> {
         if(byteDataMap.isEmpty()) {
             throw ClassNotFoundException()
