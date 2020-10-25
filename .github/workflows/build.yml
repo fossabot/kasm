@@ -9,7 +9,7 @@ jobs:
         with:
           java-version: 14
       - run: chmod +x gradlew
-      - run: ./gradlew +x gradlew
+      - run: ./gradlew build -x test
       - run: ./gradlew check
       - uses: sarisia/actions-status-discord@v1
         if: always()
