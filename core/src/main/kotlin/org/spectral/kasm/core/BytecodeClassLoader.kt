@@ -17,39 +17,59 @@
 
 package org.spectral.kasm.core
 
+import java.io.File
+import java.net.URL
+import java.net.URLClassLoader
+
 
 /**
  * Represents a JVM Classloader which can add classes from raw bytecode data.
  */
-class BytecodeClassLoader(parent: ClassLoader) : ClassLoader(parent) {
+class BytecodeClassLoader(parent: ClassLoader) : URLClassLoader(
+        buildClasspath(System.getProperty("java.class.path")).toTypedArray(),
+        parent
+) {
 
-    private val byteDataMap = hashMapOf<String, ByteArray>()
+    private val classBytes = hashMapOf<String, ByteArray>()
 
-    /**
-     * Adds / loads a class from the raw Bytecode into a JVM class object.
-     *
-     * @param name String
-     * @param bytes ByteArray
-     */
     fun addClass(name: String, bytes: ByteArray) {
-        byteDataMap[name] = bytes
+        this.classBytes[name] = bytes
     }
 
-    /**
-     * Loads a class from the internal formatted name and builds a JVM [Class] object if
-     * any is found.
-     *
-     * @param name String
-     * @return Class<*>
-     */
-    override fun loadClass(name: String): Class<*> {
-        if(byteDataMap.isEmpty()) {
-            throw ClassNotFoundException()
+    override fun findClass(name: String): Class<*> {
+        val bytes = this.classBytes[name]
+
+        return if(bytes != null) {
+            defineClass(name, bytes, 0, bytes.size)
+        } else {
+            super.findClass(name)
         }
+    }
 
-        val fileName = name.replace("\\.", "/") + ".class"
-        val bytes = byteDataMap[fileName] ?: throw ClassNotFoundException("Class data for name $fileName not found.")
+    companion object {
 
-        return defineClass(name, bytes, 0, bytes.size)
+        private fun buildClasspath(classpath: String): List<URL> {
+            if(classpath.trim().isEmpty()) return emptyList()
+
+            val urls = mutableListOf<URL>()
+
+            var pos: Int
+            var cp = classpath
+            while(cp.indexOf(File.pathSeparatorChar).also { pos = it } > -1) {
+                val part = cp.substring(0, pos)
+
+                if(part.trim().isNotEmpty()) {
+                    urls.add(File(part).toURI().toURL())
+                }
+
+                cp = cp.substring(pos + 1)
+            }
+
+            if(cp.trim().isNotEmpty()) {
+                urls.add(File(cp).toURI().toURL())
+            }
+
+            return urls.toList()
+        }
     }
 }

@@ -121,7 +121,7 @@ class ClassPool {
 
         this.forEach { cls ->
             val bytes = cls.toByteCode()
-            classloader.addClass(cls.name + ".class", bytes)
+            classloader.addClass(cls.name, bytes)
         }
 
         return classloader
